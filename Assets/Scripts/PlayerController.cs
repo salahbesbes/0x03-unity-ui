@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	// fixedUpdate execute after the Update (after player channge position the camera get it new one)
 	private void FixedUpdate()
 	{
 		float currentXPosition = Input.GetAxis("Horizontal");
@@ -56,8 +57,16 @@ public class PlayerController : MonoBehaviour
 	{
 		if (health == 0)
 		{
+			// if player health raech 0 -> restart the game
 			DisplayLosePanel();
+			// we use caroutine because this function is async (will execute after
+			// certain sec)
 			StartCoroutine(LoadScene(3));
+		}
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			// if player press the "esc"
+			SceneManager.LoadScene("menu");
 		}
 	}
 
@@ -95,10 +104,14 @@ public class PlayerController : MonoBehaviour
 
 	private IEnumerator LoadScene(float seconds)
 	{
+		// wait for sertain sec before we pass the the next line
 		yield return new WaitForSeconds(seconds);
+
+		// we restart the level
 		health = 5;
 		score = 0;
 		Scene scene = SceneManager.GetActiveScene();
+		Debug.Log(scene.name);
 		SceneManager.LoadScene(scene.name);
 	}
 }
